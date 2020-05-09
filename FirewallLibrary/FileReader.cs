@@ -29,6 +29,7 @@ namespace FirewallLibrary
                 return null;
             }
         }
+
         //Strip quotes and split data into rows
         static List<string> OrganiseInputString(string inputData)
         {
