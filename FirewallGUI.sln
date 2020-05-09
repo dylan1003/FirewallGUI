@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirewallGUI", "FirewallGUI\FirewallGUI.csproj", "{7E8B9063-4D1B-46EB-AF86-B10C52E35902}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirewallLibrary", "FirewallLibrary\FirewallLibrary.csproj", "{AF3FFEA4-7505-4F55-85FE-8292D539769D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E8B9063-4D1B-46EB-AF86-B10C52E35902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8B9063-4D1B-46EB-AF86-B10C52E35902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8B9063-4D1B-46EB-AF86-B10C52E35902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8B9063-4D1B-46EB-AF86-B10C52E35902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF3FFEA4-7505-4F55-85FE-8292D539769D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF3FFEA4-7505-4F55-85FE-8292D539769D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF3FFEA4-7505-4F55-85FE-8292D539769D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF3FFEA4-7505-4F55-85FE-8292D539769D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C2787F19-94B1-4C66-9A2D-53E14DF6FF46}
+	EndGlobalSection
+EndGlobal
