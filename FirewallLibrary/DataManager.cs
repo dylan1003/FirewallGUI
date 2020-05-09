@@ -49,18 +49,15 @@ namespace FirewallLibrary
         }
 
         // Groups rules that are functionally redundant (same server and port)
-        public void MergeRedundantRules()
+        public void FilterRedundantRules()
         {
-            var groupedRecords = unalteredRules.GroupBy(row => row.serverList[0] + row.portList[0]).ToList();
-            foreach(Rule rule in groupedRecords)
-            {
-                processedRules.Add(rule);
-            }
+            Console.WriteLine("Total rules: " + unalteredRules.Count);
+            processedRules = unalteredRules.Distinct(new Rule.RuleEqualityComparer()).ToList();
             //Benchmark difference between having sorts and no sorts
-            processedRules.Sort();
+            Console.WriteLine("New total rules: " + processedRules.Count);
         }
 
-        //Transforms records into useable objects
+        //Transforms records into more representative objects
         static List<Rule> LoadDataSet(List<string> dataRows)
         {
             Dedupe(ref dataRows);
@@ -71,13 +68,62 @@ namespace FirewallLibrary
             {
                 dataSet.Add(new Rule(dataRows[i]));
             }
-            //Benchmark difference between having sorts and no sorts
-            dataSet.Sort();
 
             return dataSet;
         }
 
-        public void 
+        public void MergeRulesOnServer()
+        {
+            var servers = processedRules.Select(e => e.server).Distinct();
+
+            int newRuleNumber = 1;
+
+            foreach (string server in servers)
+            {
+                processedRules.FindAll(r => r.server == server).ForEach(r => r.rule_name = "R-" + newRuleNumber);
+                newRuleNumber++;
+            }
+        }
+
+
+        public void ConsolidateServersAndPorts()
+        {
+            var servers = processedRules.Select(e => e.server).Distinct();
+            var ports = processedRules.Select(e => e.port).Distinct();
+            int newRuleNumber = 1;
+
+            if (ports.Count() > servers.Count())
+            {
+                Console.WriteLine("Went with ports");
+                foreach (string port in ports)
+                {
+                    processedRules.FindAll(r => r.port == port).ForEach(r => r.rule_name = "R-" + newRuleNumber);
+                    newRuleNumber++;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Went with servers");
+                foreach (string server in servers)
+                {
+                    processedRules.FindAll(r => r.server == server).ForEach(r => r.rule_name = "R-" + newRuleNumber);
+                    newRuleNumber++;
+                }
+            }
+        }
+
+        public void MergeRulesOnPort()
+        {
+            var ports = processedRules.Select(e => e.port).Distinct();
+
+            int newRuleNumber = 1;
+
+            foreach (string port in ports)
+            {
+                processedRules.FindAll(r => r.port == port).ForEach(r => r.rule_name = "R-" + newRuleNumber);
+                newRuleNumber++;
+            }
+        }
 
         // Allows options for different result sets by resetting data
         private void ResetData()
@@ -85,6 +131,13 @@ namespace FirewallLibrary
             processedRules = unalteredRules;
         }
 
-
+        public void MainDataManipulation()
+        {
+            FilterRedundantRules();
+            ConsolidateServersAndPorts();
+            //MergeRulesOnPort();
+            //MergeRulesOnServer();
+            processedRules.OrderBy(row => row.port);
+        }
     }
 }
