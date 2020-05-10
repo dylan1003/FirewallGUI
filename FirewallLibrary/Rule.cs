@@ -4,12 +4,11 @@ using System.Text;
 
 namespace FirewallLibrary
 {
+    // This class corresponds to a single row of input data
     public class Rule
     {
-        // rule can relate to multiple servers and ports
         public string rule_name { get; set; }
         public string server { get; set; }
-
         public string port { get; set; }
 
         public Rule()
@@ -25,7 +24,7 @@ namespace FirewallLibrary
             port = splitFields[2];
         }
 
-        // comparer for deduping redundant rules, rule_name is irrelevant
+        // Equality comparer for washing out redundant rules
         public class RuleEqualityComparer : IEqualityComparer<Rule>
         {
             public bool Equals(Rule x, Rule y)
