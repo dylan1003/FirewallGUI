@@ -1,12 +1,49 @@
-﻿<Window x:Class="FirewallGUI.MainWindow"
+﻿<Window x:Class="FirewallGui.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FirewallGUI"
+        xmlns:local="clr-namespace:FirewallGui"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+    <Grid Background="LightGray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="30*"/>
+            <ColumnDefinition Width="30*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="40*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Margin="0,0,0,0" VerticalAlignment="Stretch" Height="auto">
+            <TextBlock Foreground="White" Background="Black" Text="File Preview" Margin="5,0,0,0" Width="auto" Padding="2"></TextBlock>
+            <ScrollViewer Margin="0,0,0,0" Width="auto">
+                <TextBlock Foreground="Black" Background="White" Name="addedFileList" FontSize="15" Margin="5,0,0,0" VerticalAlignment="Top" Height="200" Width="auto"/>
+            </ScrollViewer>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical"
+            HorizontalAlignment="Center" VerticalAlignment="Top" Height="170" Width="200">
+            <TextBlock Foreground="White" Background="Black" Text="Files to Merge" Margin="0,0,0,0" Width="auto" Padding="2"></TextBlock>
+            <TextBlock Foreground="White" Name="FileListTextBlock" Background="White" Margin="0,0,0,20" Padding="2" Height="100" Width="200" ></TextBlock>
+            <Button x:Name="btnAddFile" Content="Add File" RenderTransformOrigin="0.474,0.544" Width="120px" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20" Click="btnAddFile_Click"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical"
+            HorizontalAlignment="Center" VerticalAlignment="Top" Height="240" Width="250">
+            <TextBlock Foreground="White" Grid.Column="1" Background="Black" Text="Field to merge on" Margin="34,50,0,0" Width="175" Padding="2" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+            <ComboBox Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="175" Margin="34,0,0,0" >
+                <ComboBoxItem>Servers</ComboBoxItem>
+                <ComboBoxItem>Ports</ComboBoxItem>
+            </ComboBox>
+            <CheckBox Content="Enable Merge Options" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" ToolTip="Enables production of rules that reference only one port or server"/>
+            <TextBox Name="outputFileTextBox"></TextBox>
+            <Button Content="Start" Grid.Column="1" HorizontalAlignment="Center" Margin="0,20,0,20" VerticalAlignment="Bottom" Width="80" Click="btnstartMerge_Click"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Margin="0,0,0,0" VerticalAlignment="Stretch" Height="auto">
+            <TextBlock Foreground="White" Background="Black" Text="File Preview" Margin="5,0,0,0" Width="auto" Padding="2"></TextBlock>
+            <ScrollViewer Margin="0,0,0,0" Width="auto">
+                <TextBlock Foreground="Black" Background="White" Name="addedFileList" FontSize="15" Margin="5,0,0,0" VerticalAlignment="Top" Height="200" Width="auto"/>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
 </Window>
