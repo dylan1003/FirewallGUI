@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FirewallLibrary
 {
@@ -41,9 +42,9 @@ namespace FirewallLibrary
         // Will help with algorithm later
         private string GetFieldWithLowerUniqueOccurrences()
         {
-            int uniquePorts = unalteredRules.GroupBy(rule => rule.server).Select(group => group.Count()).Max();
+            int uniquePorts = unalteredRules.GroupBy(rule => rule.port).Count();
 
-            int uniqueServers = unalteredRules.GroupBy(rule => rule.server).Select(group => group.Count()).Max();
+            int uniqueServers = unalteredRules.GroupBy(rule => rule.server).Count();
             // Default to server if it's even
             if(uniquePorts < uniqueServers)
             {
@@ -83,7 +84,7 @@ namespace FirewallLibrary
             return dataSet;
         }
         // If an exclusion field option is selected
-        static List<Rule> LoadDataSet(List<string> dataRows,string[] exclusionFieldValues, string exclusionField)
+        private static List<Rule> LoadDataSet(List<string> dataRows,string[] exclusionFieldValues, string exclusionField)
         {
             Dedupe(ref dataRows);
             List<Rule> dataSet = new List<Rule>();
@@ -116,34 +117,38 @@ namespace FirewallLibrary
         }
 
         // For option to have rules that reference only one server or port
-        public void MergeRulesOnOnlyPortOrServer(string fieldOption)
+        private void MergeRulesOnOnlyPortOrServer(string fieldOption)
         {
+            List <Rule> newRules = new List<Rule>();
             int newRuleNumber = 1;
-
-            if (fieldOption == "-ONEPORT")
+            if (fieldOption != "")
             {
-                var servers = processedRules.Select(e => e.server).Distinct();
-
-                foreach (string server in servers)
+                if (fieldOption == "SERVER")
                 {
-                    processedRules.FindAll(r => r.server == server).ForEach(r => r.rule_name = "R-" + newRuleNumber);
-                    newRuleNumber++;
-                }
-            }
-            else if (fieldOption == "-ONESERVER")
-            {
-                var ports = processedRules.Select(e => e.port).Distinct();
+                    var servers = processedRules.Select(e => e.server).Distinct();
 
-                foreach (string port in ports)
-                {
-                    processedRules.FindAll(r => r.port == port).ForEach(r => r.rule_name = "R-" + newRuleNumber);
-                    newRuleNumber++;
+                    foreach (string server in servers)
+                    {
+                        newRules.AddRange(processedRules.FindAll(r => r.server == server).Select(r => new Rule { rule_name = "R-" + newRuleNumber, server = r.server, port = r.port }).ToList());
+                        newRuleNumber++;
+                    }
                 }
+                else if (fieldOption == "PORT")
+                {
+                    var ports = processedRules.Select(e => e.port).Distinct();
+
+                    foreach (string port in ports)
+                    {
+                        newRules.AddRange(processedRules.FindAll(r => r.port == port).Select(r => new Rule { rule_name = "R-" + newRuleNumber, server = r.server, port = r.port }).ToList());
+                        newRuleNumber++;
+                    }
+                }
+                processedRules = newRules;
             }
         }
 
         // Goal here is reduce the number of rules
-        public void ConsolidateServersAndPorts()
+        private void ConsolidateServersAndPorts()
         {
             HashSet<Rule> oldRuleList = processedRules.ToHashSet();
             HashSet<Rule> newRuleList = new HashSet<Rule>();
@@ -211,12 +216,7 @@ namespace FirewallLibrary
             }
         }
 
-        // Allows options for different result sets by resetting and rerunning data operations, for possible GUI
-        private void ResetData()
-        {
-            processedRules = unalteredRules;
-        }
-        // Called by outer process
+        // Called by outer processes, main public call for data manager class
         public void ProcessData(string loneFieldOption = "", string exclusionField = "", string exclusionValueList = "")
         {
 
@@ -224,13 +224,13 @@ namespace FirewallLibrary
 
             FilterRedundantRules();
 
-            if (loneFieldOption != "" && (loneFieldOption == "-ONEPORT" || loneFieldOption == "-ONESERVER"))
+            if (loneFieldOption != "" && (loneFieldOption == "PORT" || loneFieldOption == "SERVER"))
             {
                 MergeRulesOnOnlyPortOrServer(loneFieldOption);
             }
             else if(loneFieldOption != "")
             {
-                Console.WriteLine("invalid -MergeField option, skipping.");
+                Console.WriteLine("invalid -MergeField option, performing regular consolidation.");
                 ConsolidateServersAndPorts();
             }
             else

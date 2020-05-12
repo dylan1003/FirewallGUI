@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Win32;
+using FirewallLibrary;
 
 namespace FirewallGui
 {
@@ -24,28 +14,62 @@ namespace FirewallGui
     {
         public string inputFileNames { get; set; }
 
-        public string outputFileName { get; set; }
+        private string outputFileName { get; set; }
 
-        string loneFieldOption { get; set; }
+        private string loneFieldOption { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
         }
-
+        
+        // Opens a windows file explorer box
         private void btnAddFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             if(fileDialog.ShowDialog() == true)
             {
-                addedFileList.Text = File.ReadAllText(fileDialog.FileName);
-                inputFileNames += fileDialog.FileName + ',';
+                string fileName = fileDialog.FileName;
+                inputFileNames += fileName + ',';
+                FileListTextBlock.Text += fileDialog.SafeFileName;
+                addedFilePreview.Text = File.ReadAllText(fileName);
             }
+
+            
         }
-
-        private void startMerge_Click(object sender, RoutedEventArgs e)
+        // Starts file processing on click
+        private async void btnStartMerge_Click(object sender, RoutedEventArgs e)
         {
+            inputFileNames = inputFileNames.TrimEnd(',');
 
+            outputFileName = outputFileTextBox.Text;
+
+            Task fileProcessing;
+
+            if (mergeOptionCheckBox.IsChecked == true)
+            {
+                loneFieldOption = mergeFieldOptionCbox.Text;
+                fileProcessing = FileHandler.ProcessFilesAsync(inputFileNames, outputFileName, loneFieldOption);
+            }
+            else
+            {
+                fileProcessing = FileHandler.ProcessFilesAsync(inputFileNames, outputFileName);
+            }
+            Console.WriteLine("Processing file, this shouldn't take long.");
+
+            await fileProcessing.ConfigureAwait(false);
+
+            aboveButtonTextBlock.Text = "Files processed";
+            btnStartMerge.Content = "Restart";
+            fileOutputPreview.Text = File.ReadAllText(outputFileName);
+        }
+        //Ensure we have an input file and output file before allowing operations
+        private void outputFileTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if(outputFileTextBox.Text != "" && inputFileNames != "")
+            {
+                btnStartMerge.IsEnabled = true;
+            }
         }
     }
 }

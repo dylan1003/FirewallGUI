@@ -18,31 +18,33 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Margin="0,0,0,0" VerticalAlignment="Stretch" Height="auto">
             <TextBlock Foreground="White" Background="Black" Text="File Preview" Margin="5,0,0,0" Width="auto" Padding="2"></TextBlock>
-            <ScrollViewer Margin="0,0,0,0" Width="auto">
-                <TextBlock Foreground="Black" Background="White" Name="addedFileList" FontSize="15" Margin="5,0,0,0" VerticalAlignment="Top" Height="200" Width="auto"/>
-            </ScrollViewer>
+            <TextBlock Foreground="Black" Background="White" Name="addedFilePreview" FontSize="15" Margin="5,0,0,0" VerticalAlignment="Top" Height="200" Width="auto">
+            </TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical"
             HorizontalAlignment="Center" VerticalAlignment="Top" Height="170" Width="200">
             <TextBlock Foreground="White" Background="Black" Text="Files to Merge" Margin="0,0,0,0" Width="auto" Padding="2"></TextBlock>
-            <TextBlock Foreground="White" Name="FileListTextBlock" Background="White" Margin="0,0,0,20" Padding="2" Height="100" Width="200" ></TextBlock>
+            <TextBlock Foreground="Black" Name="FileListTextBlock" Background="White" Margin="0,0,0,20" Padding="2" Height="100" Width="200" Text="" ></TextBlock>
             <Button x:Name="btnAddFile" Content="Add File" RenderTransformOrigin="0.474,0.544" Width="120px" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,20" Click="btnAddFile_Click"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical"
             HorizontalAlignment="Center" VerticalAlignment="Top" Height="240" Width="250">
-            <TextBlock Foreground="White" Grid.Column="1" Background="Black" Text="Field to merge on" Margin="34,50,0,0" Width="175" Padding="2" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-            <ComboBox Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="175" Margin="34,0,0,0" >
-                <ComboBoxItem>Servers</ComboBoxItem>
-                <ComboBoxItem>Ports</ComboBoxItem>
+            <TextBlock Foreground="White" Grid.Column="1" TextAlignment="Left" Background="Black" Text="Field to merge on" Margin="34,25,0,0" Width="175" Padding="2" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+            <ComboBox Grid.Column="1" Name="mergeFieldOptionCbox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="175" Margin="34,0,0,0" SelectedIndex="2">
+                <ComboBoxItem Content="Server"></ComboBoxItem>
+                <ComboBoxItem Content="Port"></ComboBoxItem>
+                <ComboBoxItem Content=""></ComboBoxItem>
             </ComboBox>
-            <CheckBox Content="Enable Merge Options" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" ToolTip="Enables production of rules that reference only one port or server"/>
-            <TextBox Name="outputFileTextBox"></TextBox>
-            <Button Content="Start" Grid.Column="1" HorizontalAlignment="Center" Margin="0,20,0,20" VerticalAlignment="Bottom" Width="80" Click="btnstartMerge_Click"/>
+            <CheckBox Content="Enable Merge Options" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" ToolTip="Enables production of rules that reference only one port or server" Name="mergeOptionCheckBox"/>
+            <TextBlock Width="200" Margin="0,20,0,0" Foreground="Black" Text="Name for output file:"></TextBlock>
+            <TextBox Name="outputFileTextBox" Width="200" Margin="0,5,0,0" TextChanged="outputFileTextBox_TextChanged"></TextBox>
+            <TextBlock Width="200" Margin="0,10,0,0" Foreground="Black" Text="" HorizontalAlignment="Center" TextAlignment="Center" Name="aboveButtonTextBlock"></TextBlock>
+            <Button Content="Start" Grid.Column="1" HorizontalAlignment="Center" Margin="0,15,0,20" VerticalAlignment="Bottom" Width="80" Click="btnStartMerge_Click" Name="btnStartMerge" IsEnabled="False"/>
         </StackPanel>
         <StackPanel Grid.Column="2" Margin="0,0,0,0" VerticalAlignment="Stretch" Height="auto">
-            <TextBlock Foreground="White" Background="Black" Text="File Preview" Margin="5,0,0,0" Width="auto" Padding="2"></TextBlock>
+            <TextBlock Foreground="White" Background="Black" Text="Output File Preview" Margin="5,0,0,0" Width="auto" Padding="2"></TextBlock>
             <ScrollViewer Margin="0,0,0,0" Width="auto">
-                <TextBlock Foreground="Black" Background="White" Name="addedFileList" FontSize="15" Margin="5,0,0,0" VerticalAlignment="Top" Height="200" Width="auto"/>
+                <TextBlock Foreground="Black" Background="White" Name="fileOutputPreview" FontSize="15" Margin="5,0,0,0" VerticalAlignment="Top" Height="200" Width="auto"/>
             </ScrollViewer>
         </StackPanel>
     </Grid>
